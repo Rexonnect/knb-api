@@ -33,6 +33,9 @@ async function sendWebhookMessage(message) {
     }
 }
 
+app.use(express.json()); // Assuming you're using JSON requests
+
+// Apply the md5Middleware to a specific POST route
 app.post('/hash', md5hash);
 
 
