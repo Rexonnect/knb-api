@@ -26,7 +26,7 @@ async function sendWebhookMessage(message) {
     }
 }
 
-app.post('/hash', md5Middleware);
+app.post('/hash', md5hash);
 
 
 app.all('/', (req, res) => {
