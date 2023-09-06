@@ -3,6 +3,13 @@ const md5hash = require('./middleware/md5hash');
 
 const app = express()
 
+
+app.all('/', (req, res) => {
+    console.log("Just got a request!")
+    res.send('Yo!')
+})
+
+
 async function sendWebhookMessage(message) {
     const { default: fetch } = await import('node-fetch');
     const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
@@ -29,9 +36,6 @@ async function sendWebhookMessage(message) {
 app.post('/hash', md5hash);
 
 
-app.all('/', (req, res) => {
-    console.log("Just got a request!")
-    res.send('Yo!')
-})
+
 
 app.listen(process.env.PORT || 3000)
