@@ -1,8 +1,12 @@
-const fetch = require('node-fetch');
+// webhookUtils.js
 
-export async function sendWebhookMessage(message, webhook) {
+import fetch from 'node-fetch';
+
+export async function sendWebhookMessage(message) {
+  const webhookUrl = "https://discord.com/api/webhooks/1128580834698477669/3fhD8kuEH0xVJz9flUCIn5tWnOmnDWJRt9M-JybgrhEh857gBk7-C4XE0attUxkPUEgr";
+
   try {
-    const response = await fetch(webhook, {
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -18,4 +22,4 @@ export async function sendWebhookMessage(message, webhook) {
   } catch (error) {
     console.error('Error sending message to the webhook:', error);
   }
-};
+}
