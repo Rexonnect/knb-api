@@ -17,7 +17,8 @@ app.use(express.json()); // Assuming you're using JSON requests
 app.post('/hash', md5hash);
 
 app.post('/message', async (req, res) => {
-  const message = { /* Your message data */ };
+  const { message } = req.body;
+//  const message = { /* Your message data */ };
   const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
   sendWebhookMessage(message, webhookUrl);
 });
