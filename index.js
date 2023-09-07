@@ -2,6 +2,7 @@ const express = require('express')
 const md5hash = require('./middleware/md5hash');
 const sendWebhookMessage = require('./middleware/webhook');
 const sanitizeInput = require('./middleware/sanitizeInput');
+import fetch from 'node-fetch';
 
 const app = express()
 
