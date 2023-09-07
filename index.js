@@ -1,13 +1,13 @@
 const express = require('express')
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
-
+const sendWebhookMessage = require('./middleware/webhook');
 
 const app = express()
 app.use(express.json());
 
 
-async function sendWebhookMessage(message, webhook) {
+/*async function sendWebhookMessage(message, webhook) {
   const { default: fetch } = await import('node-fetch');
   const webhookUrl = webhook;
 
@@ -28,7 +28,7 @@ async function sendWebhookMessage(message, webhook) {
   } catch (error) {
     console.error('Error sending message to the webhook:', error);
   }
-}
+}*/
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
