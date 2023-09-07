@@ -1,7 +1,10 @@
 const express = require('express')
+require('dotenv').config();
+//const apiKey = process.env.API_KEY;
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
+const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
 app.use(express.json());
@@ -11,10 +14,21 @@ app.all('/', (req, res) => {
     res.send('Yo!')
 })
 
+app.post('/verifycaptcha', verifyCaptcha, async (req, res) => {
+  try {
+    if (!req.body || !req.body.value) {
+      console.error('Invalid or missing request body');
+      return res.status(400).json({ error: 'Bad Request' });
+    }
 
-// Apply the md5Middleware to a specific POST route
+    res.status(200).json({ message: 'captcha successful' });
+  } catch (error) {
+    console.error('Error handling the request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/hash', md5hash);
-
 
 function sanitizeInputMiddleware(req, res, next) {
   const { value } = req.body;
