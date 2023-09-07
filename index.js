@@ -1,6 +1,6 @@
 const express = require('express')
 const md5hash = require('./middleware/md5hash');
-const sendWebhookMessage = require('./middleware/webhook'); // Update the import
+const sendWebhookMessage = require('./middleware/webhook');
 const sanitizeInput = require('./middleware/sanitizeInput');
 
 const app = express()
