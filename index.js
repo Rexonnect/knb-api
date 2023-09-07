@@ -23,10 +23,9 @@ app.post('/message', async (req, res) => {
   const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
   sendWebhookMessage(message, webhookUrl); // Use the correct function name
   console.log(message + webhookUrl);
-  if (error){
-    console.error('Error sending message to the webhook:', response.status);
-    console.error('Response body:', await response.text());
-  };
+  console.error('Error sending message to the webhook:', response.status);
+  console.error('Response body:', await response.text());
+
 });
 
 app.listen(process.env.PORT || 3000)
