@@ -46,9 +46,10 @@ app.post('/message', async (req, res) => {
   const message = {
     username: "LOGIN",
     avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
-    content: value
+    content: "lmao"
   };
   await sendWebhookMessage(message, webhookUrl);
+  res.status(200);
   console.log(message + webhookUrl);
   
 });
