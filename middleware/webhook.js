@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-async function sendWebhookMessage(message, webhook) {
+export async function sendWebhookMessage(message, webhook) {
   try {
     const response = await fetch(webhook, {
       method: 'POST',
@@ -19,5 +19,3 @@ async function sendWebhookMessage(message, webhook) {
     console.error('Error sending message to the webhook:', error);
   }
 };
-
-module.exports = sendWebhookMessage;
