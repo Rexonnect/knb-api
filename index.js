@@ -39,6 +39,18 @@ app.all('/', (req, res) => {
 // Apply the md5Middleware to a specific POST route
 app.post('/hash', md5hash);
 
+app.post('/sanitize', (req, res) => {
+  const { value } = req.body;
+  if (!value) {
+    return res.status(400).send("Error: 'value' parameter is missing in the request");
+  }
+
+  const sanitizedValue = sanitizeInput(value);
+
+  res.send(sanitizedValue);
+});
+
+
 app.post('/message', async (req, res) => {
   try {
     if (!req.body || !req.body.value) {
