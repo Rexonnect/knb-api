@@ -18,6 +18,6 @@ async function sendWebhookMessage(message, webhook) {
   } catch (error) {
     console.error('Error sending message to the webhook:', error);
   }
-}
+};
 
 module.exports = sendWebhookMessage;
