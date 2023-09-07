@@ -1,7 +1,7 @@
 const express = require('express')
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
-import fetch from 'node-fetch';
+
 
 const app = express()
 
@@ -38,6 +38,7 @@ app.all('/', (req, res) => {
 app.post('/hash', md5hash);
 
 app.post('/message', async (req, res) => {
+  
   const { value } = req.body;
 
   const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
