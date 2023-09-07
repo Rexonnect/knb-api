@@ -1,6 +1,6 @@
 const express = require('express')
 const md5hash = require('./middleware/md5hash');
-const webhook = require('./middleware/webhook');
+const sendWebhookMessage = require('./middleware/webhook'); // Update the import
 const sanitizeInput = require('./middleware/sanitizeInput');
 
 const app = express()
@@ -18,9 +18,8 @@ app.post('/hash', md5hash);
 
 app.post('/message', async (req, res) => {
   const { message } = req.body;
-//  const message = { /* Your message data */ };
   const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
-  webhook(message, webhookUrl);
+  sendWebhookMessage(message, webhookUrl); // Use the correct function name
 });
 
 app.listen(process.env.PORT || 3000)
