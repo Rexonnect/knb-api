@@ -20,7 +20,7 @@ app.post('/message', async (req, res) => {
   const { message } = req.body;
 
   const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
-  sendWebhookMessage(message, webhookUrl); // Use the correct function name
+  sendWebhookMessage(message); // Use the correct function name
   console.log(message + webhookUrl);
   
 });
