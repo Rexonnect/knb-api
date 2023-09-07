@@ -39,7 +39,13 @@ app.post('/hash', md5hash);
 
 app.post('/message', async (req, res) => {
   try {
-    const { value } = req.body;
+    if (!req.body || !req.body.value) {
+      console.error('Invalid or missing request body');
+      return res.status(400).json({ error: 'Bad Request' });
+    }
+
+    const value = req.body.value;
+
     const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
 
     const message = {
@@ -48,13 +54,15 @@ app.post('/message', async (req, res) => {
       content: value
     };
 
-    // Now, req.body should be properly parsed
     await sendWebhookMessage(message, webhookUrl);
-    console.log(message + webhookUrl);
+    console.log(message, webhookUrl);
+
+    res.status(200).json({ message: 'Message sent successfully' });
   } catch (error) {
     console.error('Error handling the request:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.listen(process.env.PORT || 3000)
