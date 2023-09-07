@@ -4,6 +4,8 @@ const sanitizeInput = require('./middleware/sanitizeInput');
 
 
 const app = express()
+app.use(express.json());
+
 
 async function sendWebhookMessage(message, webhook) {
   const { default: fetch } = await import('node-fetch');
