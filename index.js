@@ -65,7 +65,7 @@ app.post('/checkout', async (req, res) => {
     });
 
     // Respond with the Checkout session URL
-    res.json({ session_url: session.url });
+    res.json({ session_url: session.url, session_id: session.id });
   } catch (error) {
     console.error('Error creating Stripe Checkout session:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
