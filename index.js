@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const md5hash = require('./middleware/md5hash');
