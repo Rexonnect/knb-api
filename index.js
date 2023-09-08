@@ -20,7 +20,7 @@ app.post('/webhook', async (req, res) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, we_1No3KoDhYwOPKpJPttIWE1fq);
+    event = stripe.webhooks.constructEvent(req.body, sig, "we_1No3KoDhYwOPKpJPttIWE1fq");
 
 
   } catch (err) {
