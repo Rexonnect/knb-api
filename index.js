@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
-require('dotenv').config();
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
