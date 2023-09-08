@@ -8,7 +8,6 @@ const sendWebhookMessage = require('./middleware/webhook');
 //const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
-//app.use(express.json());
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
@@ -88,6 +87,16 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
   // Return a 200 response to acknowledge receipt of the event
   response.send();
 });
+
+
+
+
+app.use(express.json());
+
+
+
+
+
 
 app.get('/order/success', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
