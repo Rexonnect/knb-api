@@ -1,5 +1,6 @@
 require('dotenv').config({ path: './.env' });
 const express = require('express');
+const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
@@ -8,6 +9,7 @@ const sendWebhookMessage = require('./middleware/webhook');
 
 const app = express()
 app.use(express.json());
+app.use('/webhook', bodyParser.raw({ type: 'application/json' }));
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
