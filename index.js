@@ -30,17 +30,18 @@ app.post('/checkout', async (req, res) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Stream View Plus, Lifetime',
-              description: 'Stream View Plus, Lifetime - Knockout Bets',
+              name: product.name,
+              description: product.description,
+              images: [product.image], // Add product image URL
             },
-            unit_amount: 112 * 100, // Amount in cents
+            unit_amount: product.price * 100, // Amount in cents
           },
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: 'https://react-betting.com/success', // Replace with your success URL
-      cancel_url: 'https://react-betting.com/cancel', // Replace with your cancel URL
+      success_url: 'https://react-betting.glitch.me/success', // Replace with your success URL
+      cancel_url: 'https://react-betting.glitch.me/cancel', // Replace with your cancel URL
     });
 
     // Respond with the Checkout session URL
@@ -50,6 +51,7 @@ app.post('/checkout', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while processing your request.' });
   }
 });
+
 
 
 /*app.post('/verifycaptcha', verifyCaptcha, async (req, res) => {
