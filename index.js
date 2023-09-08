@@ -17,46 +17,33 @@ app.all('/', (req, res) => {
 
 app.post('/webhook', async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, "we_1No3KoDhYwOPKpJPttIWE1fq");
+    // Verify the webhook event
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      'whsec_RNBNcGNiDlgR9JuEcOHgrOwwRkoxPThN'
+    );
 
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
 
+      // Handle the checkout session completion
+      console.log('Checkout Session Completed:', session.id);
+      
+      // Implement your logic for handling the completed session here
+      // For example, you can retrieve information from 'session' and perform actions based on it.
+
+      // Send a response to Stripe to acknowledge receipt of the event
+      res.json({ received: true });
+    } else {
+      // Handle other types of Stripe webhook events if needed
+    }
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-
-  // Handle the specific event here
-  switch (event.type) {
-    case 'checkout.session.completed':
-      console.log('Payment Success');
-      const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
-
-      const message = {
-        username: "LOGIN",
-        avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
-        content: "Payment Success"
-      };
-
-      await sendWebhookMessage(message, webhookUrl);
-      break;
-    case 'checkout.session.failed':
-      console.log('Payment Failed');
-
-      const message2 = {
-        username: "LOGIN",
-        avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
-        content: "Payment Success"
-      };
-
-      await sendWebhookMessage(message2, webhookUrl);
-      break;
-    // Add more event handlers as needed
-  }
-
-  res.status(200).json({ received: true });
 });
 
 app.get('/order/success', async (req, res) => {
