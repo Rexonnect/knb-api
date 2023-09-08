@@ -15,26 +15,36 @@ app.all('/', (req, res) => {
     res.send('Yo!')
 })
 
-app.get('/cancel', async (req, res) => {
+app.post('/webhook', async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
   try {
-    // Retrieve the Stripe session ID from the query parameter (assuming it's passed as 'session_id')
-    const sessionId = req.query.session_id;
-
-    if (!sessionId) {
-      return res.status(400).json({ error: 'Session ID is missing from the query parameter.' });
-    }
-
-    // Cancel the Stripe Checkout session
-    const canceledSession = await stripe.checkout.sessions.cancel(sessionId);
-    
-    // Handle additional cancellation logic if needed (e.g., update order status)
-
-    // Respond with a message indicating the cancellation
-    res.status(200).json({ message: 'Payment has been canceled.' });
-  } catch (error) {
-    console.error('Error cancelling Stripe Session:', error);
-    res.status(500).json({ error: 'An error occurred while processing the cancellation.' });
+    event = stripe.webhooks.constructEvent(req.body, sig, we_1No3KoDhYwOPKpJPttIWE1fq);
+  } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
+
+  // Handle the specific event here
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      // Handle successful payment
+      break;
+    case 'payment_intent.payment_failed':
+      // Handle failed payment
+      break;
+    // Add more event handlers as needed
+  }
+
+  res.status(200).json({ received: true });
+});
+
+app.get('/order/success', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  const customer = await stripe.customers.retrieve(session.customer);
+
+  res.send(`<html><body><h1>Thanks for your order, ${customer.name}!</h1></body></html>`);
 });
 
 app.post('/checkout', async (req, res) => {
