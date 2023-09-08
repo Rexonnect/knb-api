@@ -30,7 +30,7 @@ app.post('/webhook', async (req, res) => {
 
   // Handle the specific event here
   switch (event.type) {
-    case 'payment_intent.succeeded':
+    case 'checkout.session.completed':
       console.log('Payment Success');
       const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
 
@@ -42,7 +42,7 @@ app.post('/webhook', async (req, res) => {
 
       await sendWebhookMessage(message, webhookUrl);
       break;
-    case 'payment_intent.payment_failed':
+    case 'checkout.session.failed':
       console.log('Payment Failed');
 
       const message2 = {
