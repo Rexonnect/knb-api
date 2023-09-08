@@ -29,10 +29,10 @@ app.post('/webhook', async (req, res) => {
   // Handle the specific event here
   switch (event.type) {
     case 'payment_intent.succeeded':
-      // Handle successful payment
+      console.log('Payment Success');
       break;
     case 'payment_intent.payment_failed':
-      // Handle failed payment
+      console.log('Payment Failed');
       break;
     // Add more event handlers as needed
   }
