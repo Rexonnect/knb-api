@@ -12,9 +12,9 @@ const YOUR_DOMAIN = 'http://react-betting.glitch.me';
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
+    console.log("Stripe Key:", process.env.STRIPE_KEY)
     res.send('Yo!')
 })
-console.log("Stripe Key:", process.env.STRIPE_KEY);
 
 
 app.post('/checkout', async (req, res) => {
