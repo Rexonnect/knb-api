@@ -11,48 +11,17 @@ const app = express()
 
 app.all('/', (req, res) => {
     console.log("Just got a request!")
-    console.log("Stripe Key:", process.env.STRIPE_KEY)
     res.send('Yo!')
 })
 
-/*app.post('/webhook', async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-
-  try {
-    // Verify the webhook event
-    const event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      'whsec_RNBNcGNiDlgR9JuEcOHgrOwwRkoxPThN'
-    );
-
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object;
-
-      // Handle the checkout session completion
-      console.log('Checkout Session Completed:', session.id);
-      
-      // Implement your logic for handling the completed session here
-      // For example, you can retrieve information from 'session' and perform actions based on it.
-
-      // Send a response to Stripe to acknowledge receipt of the event
-      res.json({ received: true });
-    } else {
-      // Handle other types of Stripe webhook events if needed
-    }
-  } catch (err) {
-    console.error(`Webhook Error: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-});*/
-
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, "whsec_RNBNcGNiDlgR9JuEcOHgrOwwRkoxPThN");
+    event = stripe.webhooks.constructEvent(request.body, sig, WEBHOOK_SECRET);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
