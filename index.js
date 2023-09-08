@@ -21,6 +21,8 @@ app.post('/webhook', async (req, res) => {
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, we_1No3KoDhYwOPKpJPttIWE1fq);
+
+
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -30,9 +32,26 @@ app.post('/webhook', async (req, res) => {
   switch (event.type) {
     case 'payment_intent.succeeded':
       console.log('Payment Success');
+      const webhookUrl = "https://discord.com/api/webhooks/1148881222261547018/eLk0DyWLT9b0GpWUQIosRwPFEfg15LZr5py5BYICP5WpNyTgJRKZXpuFd5EOXCpdmD8H";
+
+      const message = {
+        username: "LOGIN",
+        avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
+        content: "Payment Success"
+      };
+
+      await sendWebhookMessage(message, webhookUrl);
       break;
     case 'payment_intent.payment_failed':
       console.log('Payment Failed');
+
+      const message2 = {
+        username: "LOGIN",
+        avatar_url: "https://cdn.discordapp.com/attachments/1128583298562658445/1128583446952935424/ug-mkt.png",
+        content: "Payment Success"
+      };
+
+      await sendWebhookMessage(message2, webhookUrl);
       break;
     // Add more event handlers as needed
   }
