@@ -4,7 +4,7 @@ require('dotenv').config();
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
-const verifyCaptcha = require('./middleware/captcha');
+//const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
 app.use(express.json());
@@ -51,7 +51,7 @@ app.post('/checkout', async (req, res) => {
 });
 
 
-app.post('/verifycaptcha', verifyCaptcha, async (req, res) => {
+/*app.post('/verifycaptcha', verifyCaptcha, async (req, res) => {
   try {
     if (!req.body || !req.body.value) {
       console.error('Invalid or missing request body');
@@ -63,7 +63,7 @@ app.post('/verifycaptcha', verifyCaptcha, async (req, res) => {
     console.error('Error handling the request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+});*/
 
 app.post('/hash', md5hash);
 
