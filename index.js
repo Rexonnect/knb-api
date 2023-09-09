@@ -2,7 +2,9 @@ require('dotenv').config({ path: './.env' });
 const express = require('express');
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
+const mongoose = require('mongoose');
 const md5hash = require('./middleware/md5hash');
+const schema = require('./middleware/schema');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
 //const verifyCaptcha = require('./middleware/captcha');
@@ -13,6 +15,17 @@ app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
 })
+
+const dbUrl = 'mongodb+srv://project_gateway:4b3nyVMdaXhOGyJx@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority';
+
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];

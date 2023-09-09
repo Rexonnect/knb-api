@@ -5,5 +5,3 @@ function sanitizeInput(inputValue) {
 }
 
 module.exports = sanitizeInput;
-
-  
