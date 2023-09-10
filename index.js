@@ -21,6 +21,11 @@ const connectDB = async () => {
   }
 }
 
+app.all('/', (req, res) => {
+  console.log("Just got a request!")
+  res.send('Yo!')
+})
+
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
