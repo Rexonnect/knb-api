@@ -21,6 +21,20 @@ const connectDB = async () => {
   }
 }
 
+// Define a schema for your user model
+const userSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+  dateSignedUp: Date,
+  username: String,
+  wagers: [],
+  wagered: Number,
+  wagersCount: Number,
+});
+
+// Create a model based on the schema
+const User = mongoose.model('User', userSchema);
+
 app.all('/', (req, res) => {
   console.log("Just got a request!")
   res.send('Yo!')
@@ -74,6 +88,43 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
 
 
 app.use(express.json());
+
+
+// Create a POST endpoint for /signup
+app.post('/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the email already exists in the database
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      dateSignedUp: new Date(),
+      username: 'User1234',
+      wagers: [],
+      wagered: 0,
+      wagersCount: 0,
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 
