@@ -1,21 +1,40 @@
-require('dotenv').config({ path: './.env' });
 const express = require('express');
+const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const mongoose = require('mongoose');
 const md5hash = require('./middleware/md5hash');
-const schema = require('./middleware/schema');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
 //const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
 
+// Connect to your MongoDB database
+mongoose.connect('mongodb+srv://project_gateway:4b3nyVMdaXhOGyJx@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Define a schema for your user model
+const userSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+  dateSignedUp: Date,
+  username: String,
+  wagers: [],
+  wagered: Number,
+  wagersCount: Number,
+});
+
+// Create a model based on the schema
+const User = mongoose.model('User', userSchema);
+
 app.all('/', (req, res) => {
     console.log("Just got a request!")
     res.send('Yo!')
 })
-
+/*
 const dbUrl = 'mongodb+srv://project_gateway:4b3nyVMdaXhOGyJx@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -25,7 +44,11 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   console.log('Connected to MongoDB');
-});
+});*/
+
+
+
+
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
@@ -74,6 +97,42 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
 
 
 app.use(express.json());
+
+app.post('/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the email already exists in the database
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      dateSignedUp: new Date(),
+      username: 'User1234',
+      wagers: [],
+      wagered: 0,
+      wagersCount: 0,
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 
 
