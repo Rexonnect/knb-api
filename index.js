@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const stripe = require('stripe')(process.env.STRIPE_KEY);
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose')
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
@@ -10,48 +10,15 @@ const sendWebhookMessage = require('./middleware/webhook');
 
 const app = express()
 
-
-const uri = 'mongodb+srv://project_gateway:GPx87b7GdkBt9ok5@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority';
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-// Connect to your MongoDB database
-/*mongoose.connect('mongodb+srv://project_gateway:4b3nyVMdaXhOGyJx@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Define a schema for your user model
-const userSchema = new mongoose.Schema({
-  email: String,
-  password: String,
-  dateSignedUp: Date,
-  username: String,
-  wagers: [],
-  wagered: Number,
-  wagersCount: Number,
-});
-
-// Create a model based on the schema
-const User = mongoose.model('User', userSchema);
-
-app.all('/', (req, res) => {
-    console.log("Just got a request!")
-    res.send('Yo!')
-})*/
-/*
-const dbUrl = 'mongodb+srv://project_gateway:4b3nyVMdaXhOGyJx@knb.5z9btlu.mongodb.net/?retryWrites=true&w=majority';
-
-mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});*/
-
-
-
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+}
 
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
@@ -101,90 +68,6 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
 
 
 app.use(express.json());
-
-app.post('/signup', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Connect to the MongoDB database
-    await client.connect();
-
-    // Get a reference to the users collection
-    const db = client.db('your-database-name');
-    const usersCollection = db.collection('users');
-
-    // Check if the email already exists in the database
-    const existingUser = await usersCollection.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user document
-    const newUser = {
-      email,
-      password: hashedPassword,
-      dateSignedUp: new Date(),
-      username: 'User1234',
-      wagers: [],
-      wagered: 0,
-      wagersCount: 0,
-    };
-
-    // Insert the new user document into the database
-    await usersCollection.insertOne(newUser);
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  } finally {
-    // Close the MongoDB connection when done
-    await client.close();
-  }
-});
-
-/*app.post('/signup', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if the email already exists in the database
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      dateSignedUp: new Date(),
-      username: 'User1234',
-      wagers: [],
-      wagered: 0,
-      wagersCount: 0,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});*/
-
-
-
-
 
 
 
@@ -296,4 +179,10 @@ app.post('/message', async (req, res) => {
 });
 
 
-app.listen(process.env.PORT || 3000)
+//app.listen(process.env.PORT || 3000)
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+      console.log("listening for requests");
+  })
+})
