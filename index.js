@@ -9,6 +9,7 @@ const sendWebhookMessage = require('./middleware/webhook');
 //const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
+const PORT = process.env.PORT || 3000
 
 const connectDB = async () => {
   try {
