@@ -130,6 +130,7 @@ app.use(express.json());
 
 app.post('/signup', async (req, res) => {
   try {
+    
     const { email, password } = req.body;
 
     // Hash the password
@@ -152,19 +153,18 @@ app.post('/signup', async (req, res) => {
     console.log('User created successfully.');
 
     res.status(201).json({ message: 'User registered successfully' });
+
   } catch (error) {
-    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-      // Duplicate key error for the email field
-      console.error('Email address is already in use.');
-      res.status(400).json({ message: 'Email address is already in use.' });
-    } else {
-      // Handle other errors
-      console.error('An error occurred:', error);
-      res.status(500).json({ message: 'An error occurred during registration.' });
+    if (error.message.includes('E11000 duplicate key error')) {
+      if (error.message.includes('email')) {
+        // Duplicate key error for the email field
+        console.error('Email address is already in use.');
+      } else {
+        console.error('An error occurred:', error);
+      }
     }
   }
 });
-
 
 
 
