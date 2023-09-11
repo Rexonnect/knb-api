@@ -156,6 +156,18 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+app.get('/get-users', async (req,res)=> {
+
+  const book = await schema.find();
+
+  if (book) {
+    res.json(book)
+  } else {
+    res.send("Something went wrong.");
+  }
+  
+});
+
 app.post('/user', async (req,res) => {
   try {
 
