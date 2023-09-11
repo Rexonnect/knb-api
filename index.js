@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const schema = require("./middleware/schema");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const mongoose = require('mongoose')
 const md5hash = require('./middleware/md5hash');
@@ -20,17 +21,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 }
-
-// Define a schema for your user model
-const userSchema = new mongoose.Schema({
-  email: {type: String, required: true, trim: true,},
-  password: {type: String, required: true,},
-  dateSignedUp: {type: Date, required: true,},
-  username: String,
-  wagers: [],
-  wagered: Number,
-  wagersCount: Number,
-});
 
 userSchema.index({ email: 1 }, { unique: true });
 // Create a model based on the schema
@@ -128,7 +118,7 @@ app.use(express.json());
 });*/
 
 
-/*app.post('/signup', async (req, res) => {
+app.post('/signup', async (req, res) => {
   try {
     
     const { email, password } = req.body;
@@ -164,44 +154,30 @@ app.use(express.json());
       }
     }
   }
-});*/
+});
 
-app.post('/signup', async (req, res) => {
+app.post('/user', async (req,res) => {
   try {
+
     const { email, password } = req.body;
-
-    // Check if the email is already registered
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email address is already in use.' });
-    }
-
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      username: 'User1234', // You can customize this
-      wagers: [],
-      wagered: 0,
-      wagersCount: 0,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    console.log('User created successfully.');
-
-    res.status(201).json({ message: 'User registered successfully' });
-
+    await schema.insertMany([
+      {
+        email, 
+        password: hashedPassword,
+        dateSignedUp: new Date(),
+        username: 'User1234',
+        wagers: [],
+        wagered: 0,
+        wagersCount: 0,
+      }
+    ]);
+    res.json({"Data":"Added"})
   } catch (error) {
-    console.error('An error occurred:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.log("err", + error);
   }
-});
+})
 
 
 
