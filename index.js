@@ -22,9 +22,9 @@ const connectDB = async () => {
   }
 }
 
-userSchema.index({ email: 1 }, { unique: true });
+//userSchema.index({ email: 1 }, { unique: true });
 // Create a model based on the schema
-const User = mongoose.model('User', userSchema);
+//const User = mongoose.model('User', userSchema);
 
 app.all('/', (req, res) => {
   console.log("Just got a request!")
