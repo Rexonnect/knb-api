@@ -92,7 +92,7 @@ app.use(express.json());
 
 
 // Create a POST endpoint for /signup
-app.post('/signup', async (req, res) => {
+/*app.post('/signup', async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -124,6 +124,45 @@ app.post('/signup', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
+  }
+});*/
+
+
+app.post('/signup', async (req, res) => {
+  try {
+    
+    const { email, password } = req.body;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      dateSignedUp: new Date(),
+      username: 'User1234',
+      wagers: [],
+      wagered: 0,
+      wagersCount: 0,
+    });
+
+    // Save the user to the database
+    await newUser.save();
+
+    console.log('User created successfully.');
+
+    res.status(201).json({ message: 'User registered successfully' });
+
+  } catch (error) {
+    if (error.message.includes('E11000 duplicate key error')) {
+      if (error.message.includes('email')) {
+        // Duplicate key error for the email field
+        console.error('Email address is already in use.');
+      } else {
+        console.error('An error occurred:', error);
+      }
+    }
   }
 });
 
