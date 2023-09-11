@@ -22,7 +22,7 @@ const connectDB = async () => {
   }
 }
 
-schema.index({ email: 1 }, { unique: true });
+//schema.index({ email: 1 }, { unique: true });
 // Create a model based on the schema
 //const User = mongoose.model('User', userSchema);
 
@@ -187,7 +187,13 @@ app.post('/user', async (req,res) => {
     ]);
     res.json({"Data":"Added"})
   } catch (error) {
-    console.log("err", + error);
+    if (error.code === 11000 && error.keyPattern.email) {
+      // Duplicate key error for the email field
+      console.error('Email address is already in use.');
+      res.status(400).json({ error: 'Email address is already in use.' });
+    } else {
+      console.log("err", + error);
+    }
   }
 })
 
