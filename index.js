@@ -118,33 +118,13 @@ app.post('/signup', async (req, res) => {
     });
 
     // Save the user to the database
-    //await newUser.save();
-    try {
-      await newUser.save();
-      console.log('User created successfully.');
-    } catch (error) {
-      if (error.message.includes('E11000 duplicate key error')) {
-        if (error.message.includes('email')) {
-          // Duplicate key error for the email field
-          console.error('Email address is already in use.');
-        } else if (error.message.includes('password')) {
-          // Duplicate key error for the password field
-          console.error('Password is already in use.');
-        } else {
-          // Handle other duplicate key errors
-          console.error('Duplicate key error:', error.message);
-        }
-      } else {
-        // Handle other errors
-        console.error('An error occurred:', error);
-      }
-    }
-/*
+    await newUser.save();
+
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
-  }*/
+  }
 });
 
 
