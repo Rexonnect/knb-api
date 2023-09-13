@@ -173,13 +173,21 @@ app.post('/user', async (req,res) => {
 
     const { email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    const randomInt = await Random(100000, 999999);
+    const randomUser = "User" + randomInt;
+    const existingUser = await User.findOne({ email });
 
+    if (existingUser) {
+      // Email already exists
+      return res.status(400).json({ error: 'Email address is already in use.' });
+    }
+    
     await schema.insertMany([
       {
         email, 
         password: hashedPassword,
         dateSignedUp: new Date(),
-        username: 'User1234',
+        username: randomUser,
         wagers: [],
         wagered: 0,
         wagersCount: 0,
