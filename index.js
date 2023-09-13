@@ -186,7 +186,7 @@ app.post('/user', async (req,res) => {
     if (existingUser) {
       // Email already exists
       return res.status(400).json({ error: 'Email address is already in use.' });
-    }
+    } 
 
     await schema.insertMany([
       {
@@ -197,6 +197,7 @@ app.post('/user', async (req,res) => {
         wagers: [],
         wagered: 0,
         wagersCount: 0,
+        balance: 0,
       }
     ]);
     res.json({"Data":"Added"})

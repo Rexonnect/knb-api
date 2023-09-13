@@ -19,7 +19,8 @@ const UsersSchema = new Schema({
     username: String,
     wagers: [],
     wagered: Number,
-    wagersCount: Number
+    wagersCount: Number,
+    balance: Number,
 });
 
 module.exports = mongoose.model('Book', UsersSchema);
