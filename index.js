@@ -180,6 +180,8 @@ app.post('/user', async (req,res) => {
     const randomInt = await Random(100000, 999999);
     const randomUser = "User" + randomInt;
     const existingUser = await User.findOne({ email });
+    console.log('Random Int:', randomInt);
+    console.log('Random User:', randomUser);
 
     if (existingUser) {
       // Email already exists
