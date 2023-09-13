@@ -168,6 +168,10 @@ app.get('/get-users', async (req,res)=> {
   
 });
 
+function Random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 app.post('/user', async (req,res) => {
   try {
 
@@ -181,7 +185,7 @@ app.post('/user', async (req,res) => {
       // Email already exists
       return res.status(400).json({ error: 'Email address is already in use.' });
     }
-    
+
     await schema.insertMany([
       {
         email, 
