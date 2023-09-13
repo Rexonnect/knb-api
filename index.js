@@ -179,7 +179,7 @@ app.post('/user', async (req,res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const randomInt = await Random(100000, 999999);
     const randomUser = "User" + randomInt;
-    const existingUser = await User.findOne({ email });
+    const existingUser = await schema.findOne({ email });
     console.log('Random Int:', randomInt);
     console.log('Random User:', randomUser);
 
