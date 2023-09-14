@@ -24,7 +24,7 @@ const connectDB = async () => {
 
 app.all('/', (req, res) => {
   console.log("Just got a request!")
-  res.send('Yo!')
+  res.send('200')
 })
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
