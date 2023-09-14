@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Replace with your hCaptcha secret key
-const hCaptchaSecretKey = 'YOUR-SECRET-KEY';
+const hCaptchaSecretKey = process.env.HCAPTCHA_KEY;
 
 async function verifyCaptcha(req, res, next) {
   const { response } = req.body;

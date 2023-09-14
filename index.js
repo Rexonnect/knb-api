@@ -7,7 +7,6 @@ const mongoose = require('mongoose')
 const md5hash = require('./middleware/md5hash');
 const sanitizeInput = require('./middleware/sanitizeInput');
 const sendWebhookMessage = require('./middleware/webhook');
-//const verifyCaptcha = require('./middleware/captcha');
 
 const app = express()
 const PORT = process.env.PORT || 3000
