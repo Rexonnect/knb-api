@@ -22,15 +22,10 @@ const connectDB = async () => {
   }
 }
 
-//schema.index({ email: 1 }, { unique: true });
-// Create a model based on the schema
-//const User = mongoose.model('User', userSchema);
-
 app.all('/', (req, res) => {
   console.log("Just got a request!")
   res.send('Yo!')
 })
-
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
@@ -75,86 +70,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
   response.send();
 });
 
-
-
-
 app.use(express.json());
-
-
-// Create a POST endpoint for /signup
-/*app.post('/signup', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if the email already exists in the database
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      dateSignedUp: new Date(),
-      username: 'User1234',
-      wagers: [],
-      wagered: 0,
-      wagersCount: 0,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});*/
-
-
-app.post('/signup', async (req, res) => {
-  try {
-    
-    const { email, password } = req.body;
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      dateSignedUp: new Date(),
-      username: 'User1234',
-      wagers: [],
-      wagered: 0,
-      wagersCount: 0,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    console.log('User created successfully.');
-
-    res.status(201).json({ message: 'User registered successfully' });
-
-  } catch (error) {
-    if (error.message.includes('E11000 duplicate key error')) {
-      if (error.message.includes('email')) {
-        // Duplicate key error for the email field
-        console.error('Email address is already in use.');
-      } else {
-        console.error('An error occurred:', error);
-      }
-    }
-  }
-});
 
 app.get('/get-users', async (req,res)=> {
 
@@ -256,8 +172,6 @@ app.post('/checkout', async (req, res) => {
   }
 });
 
-
-
 app.post('/hash', md5hash);
 
 function sanitizeInputMiddleware(req, res, next) {
@@ -277,8 +191,6 @@ app.post('/sanitize', sanitizeInputMiddleware, (req, res) => {
   const sanitizedValue = req.sanitizedValue;
   res.send(sanitizedValue);
 });
-
-
 
 app.post('/message', async (req, res) => {
   try {
@@ -306,9 +218,6 @@ app.post('/message', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-//app.listen(process.env.PORT || 3000)
 
 connectDB().then(() => {
   app.listen(PORT, () => {
